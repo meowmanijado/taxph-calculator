@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import BasicPay from './BasicPay';
-import Deductions from './Deductions';
+
 
 class App extends Component {
+  handleSubmit(e) {
+    alert('foo');
+    e.preventDefault();
+  }
+
   render() {
     return (
       <div className="App">
@@ -12,10 +17,9 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1>Tax Calculator {this.props.basicSalary}</h1>
         </div>
-        <form>
+        <form onSubmit={this.handleSubmit}>
 
           <BasicPay />
-          <Deductions />
           <input type="submit" value="Submit" />
 
         </form>
@@ -24,3 +28,6 @@ class App extends Component {
   }
 }
 export default App;
+
+
+

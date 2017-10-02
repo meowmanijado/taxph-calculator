@@ -1,6 +1,6 @@
 import React from 'react';
 
-class BasicPay extends React.Component {
+export class BasicPay extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -28,10 +28,14 @@ class BasicPay extends React.Component {
 		const getStatus = this.state.status === 'single' ? 100 : 200;
 		const totalBasicPay = getPeriod + getStatus + this.state.basicSalary;
 
+		// Calculate sss
+		const employeeContrib = 0.0363;
+		const totalContrib = employeeContrib * this.state.basicSalary;
+		const sssContrib = Math.ceil(totalContrib);
+
 		return (
 			<div>
-				<select value={this.state.period} onChange={this.handleChange}
-					name="period">
+				<select value={this.state.period} onChange={this.handleChange} name="period">
 					<option value="semi-monthly">Semi-Monthly</option>
 					<option value="monthly">Monthly</option>
 				</select>
@@ -40,24 +44,26 @@ class BasicPay extends React.Component {
 					name="basicSalary"
 					onChange={this.handleUserInput}
 					value={this.state.basicSalary} />
-				<select value={this.state.status} onChange={this.handleChange}
-					name="status">
+				<select value={this.state.status} onChange={this.handleChange} name="status">
 					<option value="single">Single</option>
 					<option value="married">Married</option>
 				</select>
 				<input 
 					type="text" 
-					name="sss"
-					value={this.state.sss} />
+					name="basicSalary"
+					onChange={this.handleUserInput}
+					value={sssContrib} />
 
 				<p>{this.state.basicSalary}</p>
 				<p>{this.state.period}</p>
 				<p>{this.state.status}</p>
-				<p>{this.state.sss}</p>
 				<p>Total: {totalBasicPay}</p>
+				<p>SSS: {totalContrib}</p>
 			</div>
-		)
+		);
 	}
 }
+
+
 
 export default BasicPay;
