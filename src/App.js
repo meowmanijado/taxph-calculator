@@ -10,64 +10,201 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {period: 'monthly', salary: 0, status: 'single', sss: 0, philhealth: 0, pagibig: 0, totalBasicPay: 0, totalDeduction: 0}
+    this.state = {period: 'monthly', salary: 0, status: 'single', sss: 0, philhealth: 0, pagibig: 0, totalBasicPay: 0, totalDeduction: 0, taxableIncome: 0, withholdingTax: 0}
 
-    this.getTotalBasicPay = this.getTotalBasicPay.bind(this);
-    this.getTotalDeduction = this.getTotalDeduction.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.taxCalculator = this.taxCalculator.bind(this);
   }
 
   componentWillUpdate(nextProps, nextState) {
     if (!(this.state.salary === nextState.salary) ||
-      !(this.state.period === nextState.period)) {
+      !(this.state.period === nextState.period) ||
+      !(this.state.philhealth === nextState.philhealth)) {
       const ee = 0.0363,
             salary = parseInt(nextState.salary, 10),
             period = nextState.period;
 
       this.setState({
         sss: period === 'semi-monthly' ? ee * salary / 2 : ee * salary,
-        pagibig: this.state.period === 'semi-monthly' ?  50 : 100,
-        philhealth: this.state.period === 'semi-monthly' ?  this.getPhilhealth(salary) / 2 : this.getPhilhealth(salary), 
+        pagibig: period === 'semi-monthly' ?  50 : 100,
+        philhealth: period === 'semi-monthly' ?  this.getPhilhealth(salary) / 2 : this.getPhilhealth(salary), 
       });
     }
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.getTotalBasicPay();
-    this.getTotalDeduction();
-  }
+
+    const sss = this.state.sss,
+          philhealth = this.state.philhealth,
+          pagibig = this.state.pagibig,
+          deduction = sss + philhealth + pagibig;
+
+    this.setState({totalBasicPay: this.state.salary});
+
+    this.setState({totalDeduction: sss + philhealth + pagibig});
+    this.setState({taxableIncome: this.state.salary - deduction });
+
+    const totalTaxIncome = this.state.salary - deduction;
+
+    this.setState({withholdingTax: this.taxCalculator(totalTaxIncome)});
+  } 
 
   handleChange(e) {
     this.setState({[e.target.name]: e.target.value});
   }
 
-  getTotalBasicPay() {
-    const salary = this.state.salary;
-
-    this.setState({totalBasicPay: salary});
-  }
-
-  getTotalDeduction() {   
-    const sss = this.state.sss,
-          philhealth = this.state.philhealth,
-          pagibig = this.state.pagibig;
-
-    this.setState({totalDeduction: sss + philhealth + pagibig});
-  }
-
   getPhilhealth(salary) {
-    switch (salary) {
-      case 15000:
-        return 10000;
+    switch (true) {
+      case salary <= 8999.99:
+        return 100.00;
+      case salary <= 10999.99:
+        return 125.00;
       break;
-      case 20000:
-        return 15000;
+      case salary <= 11999.99:
+        return 137.50;
+      break;
+      case salary <= 12999.99:
+        return 150.00;
+      break;
+      case salary <= 13999.99:
+        return 162.50;
+      break;
+      case salary <= 14999.99:
+        return 175.00;
+      break;
+      case salary <= 15999.99:
+        return 187.50;
+      break;
+      case salary <= 16999.99:
+        return 200.00;
+      break;
+      case salary <= 17999.99:
+        return 212.50;
+      break;
+      case salary <= 18999.99:
+        return 225.00;
+      break;
+      case salary <= 19999.99:
+        return 237.50;
+      break;
+      case salary <= 20999.99:
+        return 250.00;
+      break;
+      case salary <= 21999.99:
+        return 262.50;
+      break;
+      case salary <= 22999.99:
+        return 275.00;
+      break;
+      case salary <= 23999.99:
+        return 287.50;
+      break;
+      case salary <= 24999.99:
+        return 300.00;
+      break;
+      case salary <= 25999.99:
+        return 312.50;
+      break;
+      case salary <= 26999.99:
+        return 325.00;
+      break;
+      case salary <= 27999.99:
+        return 337.50;
+      break;
+      case salary <= 28999.99:
+        return 350.00;
+      break;
+      case salary <= 29999.99:
+        return 362.50;
+      break;
+      case salary <= 30999.99:
+        return 375.00;
+      break;
+      case salary <= 31999.99:
+        return 387.50;
+      break;
+      case salary <= 32999.99:
+        return 400.00;
+      break;
+      case salary <= 33999.99:
+        return 412.50;
+      break;
+      case salary <= 34999.99:
+        return 425.00;
+      break;
+      case salary >= 35000.00:
+        return 437.50;
       break;
       default:
         return 0;
     }
+  }
+
+  taxCalculator(taxableIncome) {
+
+    const taxTable = {
+      income : {
+        1: {
+          excemption: 0,
+          percent: 0
+        },
+        4167: {
+          excemption: 0,
+          percent: 0.5 
+        },
+        5000: {
+          excemption: 41.67,
+          percent: 0.10
+        },
+        6667: {
+          excemption: 208.33,
+          percent: 0.15
+        },
+        10000: {
+          excemption: 708.33,
+          percent: 0.20
+        },
+        15833: {
+          excemption: 1875,
+          percent: 0.25
+        },
+        25000: {
+          excemption: 4166.67,
+          percent: 0.30
+        },
+        45833: {
+          excemption: 104167.67,
+          percent: 0.32
+        }
+      }
+    }
+
+    const taxTableIncome = Object.keys(taxTable).map(function (key) { return taxTable[key]; });
+
+    
+    console.log(taxTableIncome);
+
+    const income = [1, 4167, 5000, 6667, 10000, 15833, 25000, 45833];
+
+    console.log(income);
+
+    const closest = (income,taxableIncome) => {
+      var i = 0,
+          minDiff = 50000,
+          ans;
+
+      for(i in income) {
+         const m = Math.abs(taxableIncome-income[i]);
+         if(m<minDiff) { minDiff=m; ans=income[i]; }
+      }
+      return ans;
+    }
+
+    alert(closest(income,taxableIncome));
+
+    // excemption - [(taxableIncome - tax) * percent] = withholdingTax 
   }
 
   render() {
@@ -81,7 +218,7 @@ class App extends Component {
 
           <BasicPay period={this.state.period} salary={this.state.salary} status={this.state.status} onChange={this.handleChange} />
           <Deductions sss={this.state.sss} philhealth={this.state.philhealth} pagibig={this.state.pagibig} onChange={this.handleChange} />
-          <Total totalBasicPay={this.state.totalBasicPay} totalDeduction={this.state.totalDeduction} />
+          <Total totalBasicPay={this.state.totalBasicPay} totalDeduction={this.state.totalDeduction} taxableIncome={this.state.taxableIncome} withholdingTax={this.state.withholdingTax} />
 
           <input type="submit" value="Submit" />
 
