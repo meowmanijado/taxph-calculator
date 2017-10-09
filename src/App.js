@@ -15,6 +15,7 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.taxCalculator = this.taxCalculator.bind(this);
+    this.numberWithCommas = this.numberWithCommas.bind(this)
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -41,19 +42,23 @@ class App extends Component {
           pagibig = this.state.pagibig,
           deduction = sss + philhealth + pagibig;
 
-    this.setState({totalBasicPay: this.state.salary});
+    this.setState({totalBasicPay: this.numberWithCommas(this.state.salary)});
 
-    this.setState({totalDeduction: sss + philhealth + pagibig});
-    this.setState({taxableIncome: this.state.salary - deduction });
+    this.setState({totalDeduction: this.numberWithCommas(sss + philhealth + pagibig)});
+    this.setState({taxableIncome: this.numberWithCommas(this.state.salary - deduction) });
 
     const totalTaxIncome = this.state.salary - deduction;
 
-    this.setState({withholdingTax: this.taxCalculator(totalTaxIncome)});
-    this.setState({netIncome: parseInt(this.state.salary - deduction, 10) - parseInt(this.taxCalculator(totalTaxIncome), 10)});
+    this.setState({withholdingTax: this.numberWithCommas(this.taxCalculator(totalTaxIncome))});
+    this.setState({netIncome: this.numberWithCommas(parseInt(this.state.salary - deduction, 10) - parseInt(this.taxCalculator(totalTaxIncome), 10))});
   } 
 
   handleChange(e) {
     this.setState({[e.target.name]: e.target.value});
+  }
+
+  numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   getPhilhealth(salary) {
