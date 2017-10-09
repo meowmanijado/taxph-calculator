@@ -9,7 +9,7 @@ export class Total extends React.Component {
 				<p>Total Deductions: {this.props.totalDeduction}</p>
 				<p>Taxable Income: {this.props.taxableIncome}</p>
 				<p>Withholding Tax: {this.props.withholdingTax}</p>
-				<p>Net Income: </p>
+				<p>Net Income: {this.props.netIncome}</p>
 			</div>
 		)
 	}

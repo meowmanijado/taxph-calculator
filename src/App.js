@@ -10,7 +10,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {period: 'monthly', salary: 0, status: 'single', sss: 0, philhealth: 0, pagibig: 0, totalBasicPay: 0, totalDeduction: 0, taxableIncome: 0, withholdingTax: 0}
+    this.state = {period: 'monthly', salary: 0, status: 'single', sss: 0, philhealth: 0, pagibig: 0, totalBasicPay: 0, totalDeduction: 0, taxableIncome: 0, withholdingTax: 0, netIncome: 0}
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -49,6 +49,7 @@ class App extends Component {
     const totalTaxIncome = this.state.salary - deduction;
 
     this.setState({withholdingTax: this.taxCalculator(totalTaxIncome)});
+    this.setState({netIncome: parseInt(this.state.salary - deduction, 10) - parseInt(this.taxCalculator(totalTaxIncome), 10)});
   } 
 
   handleChange(e) {
@@ -145,50 +146,12 @@ class App extends Component {
   taxCalculator(taxableIncome) {
 
     const taxTable = {
-      income : {
-        1: {
-          excemption: 0,
-          percent: 0
-        },
-        4167: {
-          excemption: 0,
-          percent: 0.5 
-        },
-        5000: {
-          excemption: 41.67,
-          percent: 0.10
-        },
-        6667: {
-          excemption: 208.33,
-          percent: 0.15
-        },
-        10000: {
-          excemption: 708.33,
-          percent: 0.20
-        },
-        15833: {
-          excemption: 1875,
-          percent: 0.25
-        },
-        25000: {
-          excemption: 4166.67,
-          percent: 0.30
-        },
-        45833: {
-          excemption: 104167.67,
-          percent: 0.32
-        }
-      }
+          income: [1,4167,5000,6667,10000,15833,25000,45833],
+          excemption: [0,0,41.67,208.33,708.33,1875,4166.67,104167.67],
+          percent: [0,0.5,0.10,0.15,0.20,0.25,0.30,0.32]
     }
 
-    const taxTableIncome = Object.keys(taxTable).map(function (key) { return taxTable[key]; });
-
-    
-    console.log(taxTableIncome);
-
-    const income = [1, 4167, 5000, 6667, 10000, 15833, 25000, 45833];
-
-    console.log(income);
+    const income = taxTable.income;
 
     const closest = (income,taxableIncome) => {
       var i = 0,
@@ -197,14 +160,23 @@ class App extends Component {
 
       for(i in income) {
          const m = Math.abs(taxableIncome-income[i]);
-         if(m<minDiff) { minDiff=m; ans=income[i]; }
+         if(m<minDiff) { 
+            minDiff=m; 
+            ans=income[i]; 
+         }
       }
       return ans;
     }
 
-    alert(closest(income,taxableIncome));
+    const table = income.indexOf(closest(income,taxableIncome)),
+          tax = taxTable.income[table - 1],
+          excemption = taxTable.excemption[table - 1],
+          percent = taxTable.percent[table - 1];
 
-    // excemption - [(taxableIncome - tax) * percent] = withholdingTax 
+    const withholdingTax = parseInt(excemption, 10) + parseInt([(taxableIncome - tax) * percent], 10);
+
+    return withholdingTax;
+
   }
 
   render() {
@@ -218,7 +190,7 @@ class App extends Component {
 
           <BasicPay period={this.state.period} salary={this.state.salary} status={this.state.status} onChange={this.handleChange} />
           <Deductions sss={this.state.sss} philhealth={this.state.philhealth} pagibig={this.state.pagibig} onChange={this.handleChange} />
-          <Total totalBasicPay={this.state.totalBasicPay} totalDeduction={this.state.totalDeduction} taxableIncome={this.state.taxableIncome} withholdingTax={this.state.withholdingTax} />
+          <Total totalBasicPay={this.state.totalBasicPay} totalDeduction={this.state.totalDeduction} taxableIncome={this.state.taxableIncome} withholdingTax={this.state.withholdingTax} netIncome={this.state.netIncome} />
 
           <input type="submit" value="Submit" />
 
