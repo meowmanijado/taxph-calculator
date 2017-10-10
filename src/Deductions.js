@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export class Deductions extends React.Component {
 
@@ -34,3 +35,7 @@ export class Deductions extends React.Component {
 
 
 export default Deductions;
+
+Deductions.propTypes = {
+	sss: PropTypes.number
+}

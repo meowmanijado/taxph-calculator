@@ -37,20 +37,23 @@ class App extends Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    const sss = this.state.sss,
+    const basicPay = this.state.salary,
+          sss = this.state.sss,
           philhealth = this.state.philhealth,
           pagibig = this.state.pagibig,
-          deduction = sss + philhealth + pagibig;
+          deduction = sss + philhealth + pagibig,
+          taxableIncome = this.state.salary - deduction;
 
-    this.setState({totalBasicPay: this.numberWithCommas(this.state.salary)});
+    this.setState({totalBasicPay: basicPay.toLocaleString()});
 
-    this.setState({totalDeduction: this.numberWithCommas(sss + philhealth + pagibig)});
-    this.setState({taxableIncome: this.numberWithCommas(this.state.salary - deduction) });
+    this.setState({totalDeduction: deduction.toLocaleString()});
+    this.setState({taxableIncome: taxableIncome.toLocaleString() });
 
     const totalTaxIncome = this.state.salary - deduction;
+    const netIncome = parseInt(this.state.salary - deduction, 10) - parseInt(this.taxCalculator(totalTaxIncome), 10);
 
-    this.setState({withholdingTax: this.numberWithCommas(this.taxCalculator(totalTaxIncome))});
-    this.setState({netIncome: this.numberWithCommas(parseInt(this.state.salary - deduction, 10) - parseInt(this.taxCalculator(totalTaxIncome), 10))});
+    this.setState({withholdingTax: this.taxCalculator(totalTaxIncome).toLocaleString()});
+    this.setState({netIncome: netIncome.toLocaleString()});
   } 
 
   handleChange(e) {
@@ -165,9 +168,11 @@ class App extends Component {
 
       for(i in income) {
          const m = Math.abs(taxableIncome-income[i]);
-         if(m<minDiff) { 
-            minDiff=m; 
-            ans=income[i]; 
+         if(m < minDiff) { 
+
+            minDiff = m; 
+            ans = income[i];
+            
          }
       }
       return ans;

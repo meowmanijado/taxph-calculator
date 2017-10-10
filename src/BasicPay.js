@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export class BasicPay extends React.Component {
 
@@ -31,3 +32,7 @@ export class BasicPay extends React.Component {
 }
 
 export default BasicPay;
+
+BasicPay.propTypes = {
+	salary: PropTypes.number.isRequired
+}
