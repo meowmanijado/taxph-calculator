@@ -227,7 +227,13 @@ class App extends Component {
           <Deductions sss={this.state.sss} philhealth={this.state.philhealth} pagibig={this.state.pagibig} onChange={this.handleChange} />
           <Total totalBasicPay={this.state.totalBasicPay} totalDeduction={this.state.totalDeduction} taxableIncome={this.state.taxableIncome} withholdingTax={this.state.withholdingTax} netIncome={this.state.netIncome} />
 
-          <input type="submit" value="Submit" />
+          <div className="md:flex md:items-center">
+            <div className="grid mx-auto md pt-8 max-w-md">
+              <button className="shadow bg-purple hover:bg-purple-light text-white font-bold py-2 px-4 rounded" type="button">
+                Submit
+              </button>
+            </div>
+          </div>
 
         </form>
       </div>
