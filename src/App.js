@@ -15,7 +15,7 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.taxCalculator = this.taxCalculator.bind(this);
-    this.numberWithCommas = this.numberWithCommas.bind(this)
+    this.numberWithCommas = this.numberWithCommas.bind(this);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -68,83 +68,111 @@ class App extends Component {
     switch (true) {
       case salary <= 8999.99:
         return 100.00;
+        // eslint-disable-next-line
+        break;
       case salary <= 10999.99:
         return 125.00;
+        // eslint-disable-next-line
       break;
       case salary <= 11999.99:
         return 137.50;
+        // eslint-disable-next-line
       break;
       case salary <= 12999.99:
         return 150.00;
+        // eslint-disable-next-line
       break;
       case salary <= 13999.99:
         return 162.50;
+        // eslint-disable-next-line
       break;
       case salary <= 14999.99:
         return 175.00;
+        // eslint-disable-next-line
       break;
       case salary <= 15999.99:
         return 187.50;
+        // eslint-disable-next-line
       break;
       case salary <= 16999.99:
         return 200.00;
+        // eslint-disable-next-line
       break;
       case salary <= 17999.99:
         return 212.50;
+        // eslint-disable-next-line
       break;
       case salary <= 18999.99:
         return 225.00;
+        // eslint-disable-next-line
       break;
       case salary <= 19999.99:
         return 237.50;
+        // eslint-disable-next-line
       break;
       case salary <= 20999.99:
         return 250.00;
+        // eslint-disable-next-line
       break;
       case salary <= 21999.99:
         return 262.50;
+        // eslint-disable-next-line
       break;
       case salary <= 22999.99:
         return 275.00;
+        // eslint-disable-next-line
       break;
       case salary <= 23999.99:
         return 287.50;
+        // eslint-disable-next-line
       break;
       case salary <= 24999.99:
         return 300.00;
+        // eslint-disable-next-line
       break;
       case salary <= 25999.99:
         return 312.50;
+        // eslint-disable-next-line
       break;
       case salary <= 26999.99:
         return 325.00;
+        // eslint-disable-next-line
       break;
       case salary <= 27999.99:
         return 337.50;
+        // eslint-disable-next-line
       break;
       case salary <= 28999.99:
         return 350.00;
+        // eslint-disable-next-line
       break;
       case salary <= 29999.99:
         return 362.50;
+        // eslint-disable-next-line
       break;
       case salary <= 30999.99:
         return 375.00;
+        // eslint-disable-next-line
       break;
       case salary <= 31999.99:
         return 387.50;
+        // eslint-disable-next-line
       break;
       case salary <= 32999.99:
         return 400.00;
+        // eslint-disable-next-line
       break;
       case salary <= 33999.99:
         return 412.50;
+        // eslint-disable-next-line
       break;
       case salary <= 34999.99:
         return 425.00;
+        // eslint-disable-next-line
       break;
       case salary >= 35000.00:
         return 437.50;
+        // eslint-disable-next-line
       break;
       default:
         return 0;
@@ -172,7 +200,7 @@ class App extends Component {
 
             minDiff = m; 
             ans = income[i];
-            
+
          }
       }
       return ans;
@@ -191,12 +219,9 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1>Tax Calculator {this.props.basicSalary}</h1>
-        </div>
-        <form onSubmit={this.handleSubmit}> 
+      <div className="grid mx-auto md pt-8 max-w-md">
+
+        <form onSubmit={this.handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 align-center">
 
           <BasicPay period={this.state.period} salary={this.state.salary} status={this.state.status} onChange={this.handleChange} />
           <Deductions sss={this.state.sss} philhealth={this.state.philhealth} pagibig={this.state.pagibig} onChange={this.handleChange} />
